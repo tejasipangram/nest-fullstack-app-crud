@@ -22,7 +22,7 @@ function ListCard({ title, description, id, filePath }) {
       <Card.Img
         style={{ maxWidth: "100%", maxHeight: "200px" }}
         variant="top"
-        src={process.env.REACT_APP_SERVER + "/static/" + filePath}
+        src={process.env.REACT_APP_SERVER + "/" + filePath}
       />
       <Card.Body>
         <Card.Title>{title}</Card.Title>
