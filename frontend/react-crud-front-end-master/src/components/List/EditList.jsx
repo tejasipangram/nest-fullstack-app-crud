@@ -93,7 +93,7 @@ function EditList({ id, title, description, filePath }) {
             </Form.Group>
             {file && file.original && (
               <img
-                src={process.env.REACT_APP_SERVER + "/static/" + file.original}
+                src={process.env.REACT_APP_SERVER + "/" + file.original}
                 style={{ maxWidth: "100%" }}
               />
             )}

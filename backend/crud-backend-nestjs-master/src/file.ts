@@ -6,7 +6,9 @@ export const customStorage = diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.random() * 1e9;
     const etext = extname(file.originalname);
-    const fileName = `${file.originalname}-${uniqueSuffix}${etext}`;
+    const fileName = `${
+      file.originalname.split('.')[0]
+    }-${uniqueSuffix}${etext}`;
 
     cb(null, fileName);
   },

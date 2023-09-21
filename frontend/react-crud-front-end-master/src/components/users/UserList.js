@@ -12,7 +12,7 @@ function UsersList() {
       const res = await fetch(`${process.env.REACT_APP_SERVER}/user`);
       const data = await res.json();
       console.log(data, "this is data");
-      setUser(data.data);
+      setUser(data);
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -30,9 +30,13 @@ function UsersList() {
     >
       <div className="container">
         <ListGroup data-bs-theme={darkMode ? "dark" : "light"}>
-          {user.map((user) => {
-            return <ListGroup.Item>{user}</ListGroup.Item>;
-          })}
+          {user && user.length > 0 ? (
+            user.map((user, index) => {
+              return <ListGroup.Item key={index}>{user}</ListGroup.Item>;
+            })
+          ) : (
+            <p>No user found</p>
+          )}
         </ListGroup>
       </div>
     </div>

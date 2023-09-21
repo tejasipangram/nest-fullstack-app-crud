@@ -3,6 +3,7 @@ import {
   Controller,
   DefaultValuePipe,
   Delete,
+  FileTypeValidator,
   FileValidator,
   Get,
   MaxFileSizeValidator,
@@ -21,7 +22,7 @@ import { Simpleresponse } from './simpleresponse/simpleresponse.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path/posix';
-import { FileType } from './validators/Validatefile';
+import { FileType, FileUpdateType } from './validators/Validatefile';
 import { ParamsTokenFactory } from '@nestjs/core/pipes';
 import { query } from 'express';
 
@@ -54,15 +55,34 @@ export class AppController {
     return this.appService.create(body, file, userid);
   }
 
-  @Put(':id')
+  @Put('update/:id')
   @UseInterceptors(FileInterceptor('image'))
-  updateOne(@Param('id') id, @Body() body): Promise<Crud> {
-    return this.appService.update(id, body);
+  updateOne(
+    @Param('id')
+    id,
+    @FileUpdateType(['image/jpg', 'image/png'])
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 })],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File | undefined,
+
+    @Body()
+    body,
+  ): Promise<Simpleresponse> {
+    return this.appService.update(id, body, file);
   }
 
-  @Delete(':id')
-  deleteOne(@Param('id') id): Promise<Simpleresponse> {
+  @Delete('delete/:id')
+  deleteOne(@Param('id') id: string): Promise<Simpleresponse> {
     return this.appService.delete(id);
+  }
+
+  @Get('user')
+  getUsers() {
+    return this.appService.getAllUsers();
   }
 }
 //  {

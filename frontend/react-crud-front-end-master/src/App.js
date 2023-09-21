@@ -74,7 +74,6 @@ function App() {
   };
   //getting the data from json api
   const getAllData = (page = 1) => {
-    console.log(pageSize, "get all data");
     if (user) {
       setLoading(true);
       const encodedUserId = encodeURIComponent(user.uid);
@@ -84,7 +83,6 @@ function App() {
         .then((response) => response.json())
         .then((json) => {
           if (json.success) {
-            console.log(json);
             setLoading(false);
             setTotalPages(json.totalPages);
             setCurrentData(json.data);
@@ -120,19 +118,26 @@ function App() {
       });
 
       const data = await res.json();
-      toast.success("List updated");
-      const newData = currentData.map((list, index) => {
-        if (data.data._id === list._id) {
-          list.title = title;
-          list.description = description;
-          list.filePath = data.data.filePath;
-        }
-        return list;
-      });
 
-      setCurrentData(newData);
-      setLoading(false);
-      setKey(Math.random());
+      if (data.success) {
+        toast.success("List updated");
+
+        const newData = currentData.map((list, index) => {
+          if (data.data._id === list._id) {
+            list.title = title;
+            list.description = description;
+            list.filePath = data.data.filePath;
+          }
+          return list;
+        });
+
+        setCurrentData(newData);
+        setLoading(false);
+        setKey(Math.random());
+      } else {
+        toast.error(data.message ? data.message : "Something went wrong");
+        setLoading(false);
+      }
     } catch (error) {
       toast.error("An error occured");
       setLoading(false);

@@ -7,7 +7,8 @@ export type CatDocument = HydratedDocument<Crud>;
 export class Crud {
   @Prop()
   title: string;
-
+  @Prop()
+  email: string;
   @Prop()
   description: string;
 
